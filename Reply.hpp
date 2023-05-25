@@ -2,7 +2,7 @@
 #define REPLY_HPP
 
 //user connect
-#define RPL_WELCOME(servername, nick, name)				":" + servername + " 001 " + nick + " :Welcome to the Internet Relay Chat" + nick + "!" + name + "@" + ip + "\r\n"
+#define RPL_WELCOME(servername, nick, name, ip)				":" + servername + " 001 " + nick + " :Welcome to the Internet Relay Chat " + nick + "!" + name + "@" + ip + "\r\n"
 #define RPL_YOURHOST(servername, nick)					":" + servername + " 002 " + nick + " :Your host is " + servername + ", running version 1.0\r\n"
 #define RPL_CREATED(servername, nick)					":" + servername + " 003 " + nick + " :This server was created on MacOS\r\n"
 // #define RPL_MYINFO(nick)	":IRC 004" + nick + ":<servername> <version> <available user modes> <available channel modes>"
@@ -16,9 +16,9 @@
 #define RPL_ERROR(error ,name, ip, message)				":ERROR :" + error + ":" + " (" name + "@" + ip + ") " + "[" + message + "]" + "\r\n"
 //part
 #define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART " + channel + "\r\n"
-#define RPL_PART(nick, name, ip, channel, message)		":" + nick + "!" + name + "@" + ip + " PART " + channel + " :" + message + "\r\n"
+#define RPL_PARTWITHMSG(nick, name, ip, channel, message)	":" + nick + "!" + name + "@" + ip + " PART " + channel + " :" + message + "\r\n"
 //pong
-#define RPL_PONG(servername, ip, token	)				":" + servername + " PONG " + servername + ":" + servername + "\r\n"
+#define RPL_PONG(servername, ip)				":" + servername + " PONG " + servername + ":" + servername + "\r\n"
 //password fail
 #define ERR_PASSWDMISMATCH(ip, user)					":" + ip + " 464 " + user + " :Password incorrect.\r\n"
 //join

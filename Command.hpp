@@ -4,6 +4,7 @@
 #include "Server.hpp"
 #include "User.hpp"
 #include "Channel.hpp"
+#include "Reply.hpp"
 
 #define CONNECT 1
 #define JOIN 2
@@ -19,6 +20,9 @@
 #define MODE 12
 #define OP 13
 #define DEOP 14
+
+class Server;
+class User;
 
 class Command
 {
@@ -53,6 +57,7 @@ public:
 	Command(Server *server, User *sender);
     // test
     void testPrint();
+	void testSend();
 };
 
 #endif

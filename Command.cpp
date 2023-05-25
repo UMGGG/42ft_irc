@@ -53,6 +53,19 @@ Command::Command(Server *server, User *sender)
     }
 }
 
+void Command::testSend()
+{
+	const std::string name1 = "irc";
+	const std::string name2 = "jeonjaeyoung";
+	const std::string ip1 = "127.0.0.1";
+	if (_command == "CAP")
+		send_single(_sender->getSocket(), RPL_WELCOME(name1, name2, name2, ip1));
+	else if (_command == "PING")
+		send_single(_sender->getSocket(), RPL_PONG(name1, ip1));
+	//else if (_command == "PRIVMSG")
+		//send_single(_sender->getSocket(),)
+}
+
 void Command::testPrint()
 {
     if (_command.empty())
@@ -66,4 +79,5 @@ void Command::testPrint()
     else
         std::cout << "Trailing :\t" << _trailing << std::endl;
     std::cout << "------------" << std::endl;
+	testSend();
 }
