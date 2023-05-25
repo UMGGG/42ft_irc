@@ -2,11 +2,12 @@
 #define REPLY_HPP
 
 //user connect
-#define RPL_WELCOME(servername, nick, name, ip)				":" + servername + " 001 " + nick + " :Welcome to the Internet Relay Chat " + nick + "!" + name + "@" + ip + "\r\n"
+#define RPL_WELCOME(servername, nick, name, ip)			":" + servername + " 001 " + nick + " :Welcome to the Internet Relay Chat " + nick + "!" + name + "@" + ip + "\r\n"
 #define RPL_YOURHOST(servername, nick)					":" + servername + " 002 " + nick + " :Your host is " + servername + ", running version 1.0\r\n"
 #define RPL_CREATED(servername, nick)					":" + servername + " 003 " + nick + " :This server was created on MacOS\r\n"
 // #define RPL_MYINFO(nick)	":IRC 004" + nick + ":<servername> <version> <available user modes> <available channel modes>"
-
+//unknown command
+#define ERR_UNKNOWNCOMMAND(servername, nick, command)	":" + servername + " 421 " + nick + " " + command + ":Unknown command\r\n"
 //msg
 #define RPL_PRIVMSG(nick, name, ip, receiver, message)	":" + nick + "!" + name + "@" + ip + " PRIVMSG " + receiver + " :" + message + "\r\n"
 //notice
@@ -18,7 +19,7 @@
 #define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART " + channel + "\r\n"
 #define RPL_PARTWITHMSG(nick, name, ip, channel, message)	":" + nick + "!" + name + "@" + ip + " PART " + channel + " :" + message + "\r\n"
 //pong
-#define RPL_PONG(servername, ip)				":" + servername + " PONG " + servername + ":" + servername + "\r\n"
+#define RPL_PONG(servername, ip)						":" + servername + " PONG " + servername + ":" + servername + "\r\n"
 //password fail
 #define ERR_PASSWDMISMATCH(ip, user)					":" + ip + " 464 " + user + " :Password incorrect.\r\n"
 //join
@@ -45,4 +46,8 @@
 #define RPL_OP(nick, name, ip, channel, target)			":" + nick + "!" + name + "@" + ip + " MODE " + channel + " +o " + target + "\r\n"
 //deop
 #define RPL_DEOP(nick, name, ip, channel, target)		":" + nick + "!" + name + "@" + ip + " MODE " + channel + " -o " + target + "\r\n"
+//mode_channel
+#define RPL_CHANNELMODEMSG(nick, name, ip, channel, mode)	": :" + nick + "!" + name + "@" + ip + " MODE " + channel + " " + mode + "\r\n"
+#define RPL_CHANNELMODEMSGPARAM(nick, name, ip, channel, mode, param)	": :" + nick + "!" + name + "@" + ip + " MODE " + channel + " " + mode + " " + param "\r\n"
+
 #endif
