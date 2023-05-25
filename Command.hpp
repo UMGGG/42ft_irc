@@ -31,14 +31,14 @@ private:
 	std::vector<std::string> params;
 	std::string trailer;
 
-    Server *_server;
-    User *_sender;
-    // received message
-    std::string _command;
-    std::vector<std::string> _params;
-    std::string _trailing;
-    // reply
-    std::string _reply;
+	Server *_server;
+	User *_sender;
+	// received message
+	std::string _command;
+	std::vector<std::string> _params;
+	std::string _trailing;
+	// reply
+	std::string _reply;
 
 public:
 	//Command(std::string pre, std::string com, std::vector<std::string> par, std::string tra);
