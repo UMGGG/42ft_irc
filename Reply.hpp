@@ -23,7 +23,7 @@
 // #define RPL_QUIT(nick, name, ip, message)				":" + nick + "!" + name + "@" + ip + " Quit :Quit: " + message + "\r\n"
 #define RPL_ERROR(error, name, ip, message)             "ERROR :" + error + ": (" + name + "@" + ip + ") [" + message + "]\r\n"
 //part
-// #define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART " + channel + "\r\n"
+#define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART :" + channel + "\r\n"
 #define RPL_PARTWITHMSG(nick, name, ip, channel, message)	":" + nick + "!" + name + "@" + ip + " PART " + channel + " :" + message + "\r\n"
 //pong
 #define RPL_PONG(server, ip)						":" + server + " PONG " + server + ":" + server + "\r\n"

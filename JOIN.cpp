@@ -13,7 +13,6 @@ void Command::JOIN()
     }
 
     // Not registered
-    // :irc.local 451 <nick> JOIN :You have not registered.
     if (_sender->getStatus() != CONNECTED)
     {
         sendReply(_sender->getSocket(), ERR_NOTREGISTERED(_server->getName(), _sender->getNick(), "JOIN"));
@@ -48,7 +47,6 @@ void Command::JOIN()
     for (std::map<std::string, std::string>::iterator it = nameKey.begin(); it != nameKey.end(); ++it)
     {
         // NO # sign - ERR_BADCHANMASK
-        //:irc.local 476 <nick> tradis :Invalid channel name
         if (it->first[0] != '#')
         {
             sendReply(_sender->getSocket(), ERR_BADCHANMASK(_server->getName(), _sender->getNick(), it->first));

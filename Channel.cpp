@@ -5,14 +5,6 @@ Channel::Channel()
 {
 }
 
-// Channel::Channel(std::string name, User *creater)
-// : _name(name), _topic(""), _inviteOnly(false), _restrictedTopic(true), _password("")
-// {
-//     // _users.insert(std::pair<int, User*>(creater->getSocket(), creater));
-//     _users.push_back(creater);
-//     _operators.push_back(creater);
-// }
-
 void Channel::sendReply(std::string& reply, User* except)
 {
     std::vector<User*>::iterator it = _users.begin();

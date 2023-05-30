@@ -10,6 +10,13 @@ else
 
 void Command::PART()
 {
+    // more params
+    if (_params.size() < 1)
+    {
+        sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "PART"));
+        return;
+    }
+
     //init parameters
     std::vector<std::string> target;
     std::string buf;
@@ -21,22 +28,15 @@ void Command::PART()
         buf.clear();
     }
 
-    // more params
-    if (_params.size() < 1)
-    {
-        sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "PART"));
-        return;
-    }
-
     for (std::vector<std::string>::iterator it = target.begin(); it != target.end(); ++it)
     {
         // make reply message
         //:root__!root@127.0.0.1 PART :#b
         std::string reply = "";
         if (_trailing.empty())
-            reply = ":" + _sender->getNick() + "!" + _sender->getUsername() + "@" + _sender->getIP() + " PART :" + *it + "\r\n";
+            reply = RPL_PART(_sender->getNick(), _sender->getUsername(), _sender->getIP(), *it);
         else
-            reply = ":" + _sender->getNick() + "!" + _sender->getUsername() + "@" + _sender->getIP() + " PART " + *it + " :" + _trailing + "\r\n";
+            reply = RPL_PARTWITHMSG(_sender->getNick(), _sender->getUsername(), _sender->getIP(), *it, _trailing);
 
         Channel* channel = _server->getChannel(*it);
 
