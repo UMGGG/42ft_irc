@@ -49,6 +49,7 @@ private:
     // invite된 채널에 join하면 _invited 목록에서 제외
     std::vector<Channel*> _invited;
 
+    clock_t _pingtime;
 public:
     User();
 
@@ -67,6 +68,7 @@ public:
     void setNick(std::string &nick);
     void setUsername(std::string &username);
     void setRealname(std::string &realname);
+    void setPingtime();
 
     void addJoined(Channel* channel);
     void removeJoined(Channel* channel);
@@ -82,6 +84,7 @@ public:
     std::string getUsername() const;
     std::string getRealname() const;
     std::vector<Channel*> getJoined();
+    time_t getPingtime();
 };
 
 #endif

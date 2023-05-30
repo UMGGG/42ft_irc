@@ -19,6 +19,7 @@ void Command::USER()
     _sender->setUsername(_params[0]);
     _sender->setRealname(_trailing);
     _sender->setRegistered(true);
+    _sender->setPingtime();
 
     // RPL_WELCOME
     connect();

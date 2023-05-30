@@ -43,55 +43,67 @@ void Server::startServer(int port)
     {
         polled = poll(&_pollFD[0], _pollFD.size(), 5000);
 
-        if (_pollFD[0].revents & POLLIN)
+        if (polled > 0)
         {
-            clientAddrSize = sizeof(clientAddr);
-            clientSock = accept(listenSock, (struct sockaddr *)&clientAddr, &clientAddrSize);
-            fcntl(clientSock, F_SETFL, O_NONBLOCK);
-
-            struct pollfd newPoll;
-            newPoll.fd = clientSock;
-            newPoll.events = POLLIN;
-            _pollFD.push_back(newPoll);
-
-            User *newUser = new User;
-
-            newUser->setSocket(clientSock);
-            newUser->setServer(this);
-            _users.insert(std::pair<int, User*>(clientSock, newUser));
-
-            newUser->setIP(inet_ntoa(clientAddr.sin_addr));
-            std::cout << "connected (fd: " << clientSock << ", IPv4: " << newUser->getIP() << ")" << std::endl;
-            continue;
-        }
-
-        std::vector<struct pollfd>::iterator it = _pollFD.begin() + 1;
-        while (it != _pollFD.end())
-        {
-            // 연결 종료
-            if (it->revents & POLLHUP)
+            if (_pollFD[0].revents & POLLIN)
             {
-                //DEBUG
-                std::cout << "POLLHUP disconnect" << std::endl;
+                clientAddrSize = sizeof(clientAddr);
+                clientSock = accept(listenSock, (struct sockaddr *)&clientAddr, &clientAddrSize);
+                fcntl(clientSock, F_SETFL, O_NONBLOCK);
 
-                disconnect(_users.at(it->fd));
+                struct pollfd newPoll;
+                newPoll.fd = clientSock;
+                newPoll.events = POLLIN;
+                _pollFD.push_back(newPoll);
+
+                User *newUser = new User;
+
+                newUser->setSocket(clientSock);
+                newUser->setServer(this);
+                _users.insert(std::pair<int, User*>(clientSock, newUser));
+
+                newUser->setIP(inet_ntoa(clientAddr.sin_addr));
+                std::cout << "connected (fd: " << clientSock << ", IPv4: " << newUser->getIP() << ")" << std::endl;
                 continue;
             }
 
-            // 소켓 읽기 및 command 실행
-            if (it->revents & (POLLIN | POLLERR))
+            std::vector<struct pollfd>::iterator it = _pollFD.begin() + 1;
+            while (it != _pollFD.end())
             {
-                if (_users.at(it->fd)->readMessage() <= 0)
-                //if (User::_state == DELETE)
+                // 연결 종료
+                if (it->revents & POLLHUP)
                 {
                     //DEBUG
-                    std::cout << "POLLIN disconnect" << std::endl;
+                    std::cout << "POLLHUP disconnect" << std::endl;
 
                     disconnect(_users.at(it->fd));
                     continue;
                 }
+
+                // 소켓 읽기 및 command 실행
+                if (it->revents & (POLLIN | POLLERR))
+                {
+                    if (_users.at(it->fd)->readMessage() <= 0)
+                    //if (User::_state == DELETE)
+                    {
+                        //DEBUG
+                        std::cout << "POLLIN disconnect" << std::endl;
+
+                        disconnect(_users.at(it->fd));
+                        continue;
+                    }
+                }
+                ++it;
             }
-            ++it;
+        }
+        std::map<int, User*>::iterator uit = _users.begin();
+        while (uit != _users.end())
+        {
+            time_t checktime = time(NULL);
+            if ((int)(checktime - uit->second->getPingtime()) > 120)
+                std::cout << "PING timeover (fd: " << uit->second->getNick() << std::endl;
+            //클라이언트 없에기
+            uit++;
         }
     }
 }
@@ -117,7 +129,7 @@ void Server::disconnect(User *user)
 
     // remove on user list
     _users.erase(user->getSocket());
-    
+
     // remove on pollfds
     for (std::vector<struct pollfd>::iterator it = _pollFD.begin(); it != _pollFD.end(); ++it)
     {

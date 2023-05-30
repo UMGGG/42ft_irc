@@ -2,5 +2,6 @@
 
 void Command::PONG()
 {
-	sendReply(_sender->getSocket(), (_sender->getServer()->getName(), _sender->getIP()));
+	_sender->setPingtime();
+	sendReply(_sender->getSocket(), RPL_PONG(_sender->getServer()->getName(), _sender->getIP()));
 }

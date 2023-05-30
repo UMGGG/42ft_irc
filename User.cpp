@@ -124,6 +124,11 @@ void User::removeJoined(Channel* channel)
         _joined.erase(target);
 }
 
+void User::setPingtime()
+{
+    _pingtime = time(NULL);
+}
+
 //getters
 Server* User::getServer()
 {
@@ -173,4 +178,9 @@ std::string User::getRealname() const
 std::vector<Channel*> User::getJoined()
 {
     return _joined;
+}
+
+time_t User::getPingtime()
+{
+    return _pingtime;
 }
