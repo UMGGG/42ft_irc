@@ -21,9 +21,9 @@
 //quit, exit
 #define RPL_QUIT(nick, name, ip, message)				":" + nick + "!" + name + "@" + ip + " Quit :" + message + "\r\n"
 // #define RPL_QUIT(nick, name, ip, message)				":" + nick + "!" + name + "@" + ip + " Quit :Quit: " + message + "\r\n"
-#define RPL_ERROR(error, name, ip, message)             ":ERROR :" + error + ": (" + name + "@" + ip + ") [" + message + "]\r\n"
+#define RPL_ERROR(error, name, ip, message)             "ERROR :" + error + ": (" + name + "@" + ip + ") [" + message + "]\r\n"
 //part
-#define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART " + channel + "\r\n"
+// #define RPL_PART(nick, name, ip, channel)				":" + nick + "!" + name + "@" + ip + " PART " + channel + "\r\n"
 #define RPL_PARTWITHMSG(nick, name, ip, channel, message)	":" + nick + "!" + name + "@" + ip + " PART " + channel + " :" + message + "\r\n"
 //pong
 #define RPL_PONG(server, ip)						":" + server + " PONG " + server + ":" + server + "\r\n"
@@ -40,7 +40,7 @@
 #define RPL_INVITING(nick, server, target, channel)	":" + server + " 341 " + nick + " " + target + " " + channel + "\r\n"
 #define RPL_INVITED(nick, name, ip, target, channel)	":" + nick + "!" + name + "@" + ip + " INVITE " + target + " :" + channel + "\r\n"
 //nick
-#define RPL_NICK(nick, name, ip , newnick)				":" + nick + "!" + name + "@" + ip + " NICK " + newnick + "\r\n"
+#define RPL_NICK(nick, name, ip , newnick)				":" + nick + "!" + name + "@" + ip + " NICK :" + newnick + "\r\n"
 #define ERR_NICKNAMEINUSE(server, nick, newnick)	":" + server + " 433 " + nick + " " + newnick + " :Nickname is already in use." + "\r\n"
 //#define ERR_ERRONEUSNICKNAME(server, nick, newnick)
 //kick
