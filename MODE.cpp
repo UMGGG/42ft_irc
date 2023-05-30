@@ -15,9 +15,17 @@ void Command::MODE()
         sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "PART"));
         return;
     }
-    // no mode option (ignore)
+    // no mode option (show current channel's mode)
     else if (_params.size() == 1)
+    {
+        // if (no such channel)
+        //:irc.local 403 qwer #a :No such channel
+
+        // reply (current channel's mode)
+        // :irc.local 324 qwer #tradis +knt :<key>
+        // :irc.local 329 qwer #tradis :1685442445
         return;
+    }
 
     //todo
 }
