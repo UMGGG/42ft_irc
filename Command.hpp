@@ -34,6 +34,7 @@ public:
     void PRIVMSG();
     void JOIN();
     void PART();
+    void PONG();
 };
 
 #endif

@@ -65,6 +65,6 @@
 #define ERR_NOTONCHANNEL(server, nick, channel)     ":" + server + " 442 " + nick + " " + channel + " :You're not on that channel\r\n"
 #define ERR_INVITEONLYCHAN(server, nick, channel)   ":" + server + " 473 " + nick + " " + channel + " :Cannot join channel (invite only)\r\n"
 #define ERR_BADCHANNELKEY(server, nick, channel)    ":" + server + " 475 " + nick + " " + channel + " :Cannot join channel (incorrect channel key)\r\n"
-#define ERR_CHANNELISFULL(server, nick, channel)    ":" + server + " 475 " + nick + " " + channel + " :Cannot join channel (channel is full)\r\n"
+#define ERR_CHANNELISFULL(server, nick, channel)    ":" + server + " 471 " + nick + " " + channel + " :Cannot join channel (channel is full)\r\n"
 
 #endif

@@ -45,6 +45,8 @@ void Command::execute()
         JOIN();
     else if (!_command.compare("PART"))
         PART();
+    else if (!_command.compare("PING"))
+        PONG();
 }
 
 void Command::sendReply(int fd, std::string reply)
