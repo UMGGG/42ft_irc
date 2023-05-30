@@ -10,7 +10,7 @@ else
 
 void Command::PART()
 {
-    // more params
+    // need more params
     if (_params.size() < 1)
     {
         sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "PART"));
