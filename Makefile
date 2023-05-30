@@ -11,7 +11,8 @@ PRIVMSG.cpp \
 QUIT.cpp \
 USER_C.cpp \
 PART.cpp \
-PONG.cpp
+PONG.cpp \
+MODE.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 .cpp.o :
