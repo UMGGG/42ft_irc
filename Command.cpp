@@ -47,6 +47,8 @@ void Command::execute()
         PART();
     else if (!_command.compare("PING"))
         PONG();
+    else if (!_command.compare("MODE"))
+        MODE();
 }
 
 void Command::sendReply(int fd, std::string reply)

@@ -35,6 +35,7 @@ public:
     void JOIN();
     void PART();
     void PONG();
+    void MODE();
 };
 
 #endif
