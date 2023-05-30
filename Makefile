@@ -12,7 +12,8 @@ QUIT.cpp \
 USER_C.cpp \
 PART.cpp \
 PONG.cpp \
-MODE.cpp
+MODE.cpp \
+KICK.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 .cpp.o :

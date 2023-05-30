@@ -49,6 +49,8 @@ void Command::execute()
         PONG();
     else if (!_command.compare("MODE"))
         MODE();
+    else if (!_command.compare("KICK"))
+        KICK();
 }
 
 void Command::sendReply(int fd, std::string reply)

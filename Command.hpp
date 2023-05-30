@@ -36,6 +36,7 @@ public:
     void PART();
     void PONG();
     void MODE();
+    void KICK();
 };
 
 #endif
