@@ -59,6 +59,7 @@
 #define RPL_CHANNELMODEMSGPARAM(nick, name, ip, channel, mode, param)	": :" + nick + "!" + name + "@" + ip + " MODE " + channel + " " + mode + " " + param "\r\n"
 #define ERR_UNKNOWNMODE(server, nick, mode)         ":" + server + " 472 " + nick + " " + mode + " :is not a recognised channel mode.\r\n"
 #define ERR_INVALIDMODEPARAM(server, nick, channel, mode, parameter) ":" + server + " 696 " + nick + " " + channel + " " + mode + " " + parameter + " :You must specify a parameter for the mode.\r\n"
+#define ERR_KEYSET(server, nick, channel)           ":" + server + " 467 " + nick + " " + channel + " :Channel key already set\r\n"
 
 //channel
 #define ERR_NOSUCHCHANNEL(server, nick, channel)    ":" + server + " 403 " + nick + " " + channel + " :No such channel\r\n"
