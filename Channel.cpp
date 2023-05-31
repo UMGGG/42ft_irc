@@ -169,6 +169,11 @@ void Channel::setKey(std::string key)
     _key = key;
 }
 
+void Channel::setLimit(size_t limit)
+{
+    _limit = limit;
+}
+
 void Channel::addUser(User* user)
 {
     _users.push_back(user);

@@ -68,6 +68,7 @@ public:
     //setters
     void setName(std::string name);
     void setKey(std::string key);
+    void setLimit(size_t limit);
 
     void addUser(User* user);
     void addOperator(User* user);
