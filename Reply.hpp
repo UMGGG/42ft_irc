@@ -75,4 +75,6 @@
 #define ERR_CHANOPRIVSNEEDED_TOPIC(server, nick, channel)	":" + server + " 482 " + nick + " " + channel + " :You do not have access to change the topic on this channel\r\n"
 #define RPL_NOTOPIC(server, nick, channel)	":" + server + " 331 " + nick + " " + channel + " :No topic is set\r\n"
 #define RPL_TOPIC(server, nick, channel, topic)	":" + server + " 332 " + nick + " " + channel + " " + topic + "\r\n"
+#define RPL_TOPICWHOTIME(server, nick, channel, setter, time) ":" + server + " 333 " + nick + " " + channel + " " + setter + " " + time"\r\n"
+//:irc.local 333 jae1__ #ch1 jae1!root@127.0.0.1 1685554557
 #endif
