@@ -136,12 +136,14 @@ void Channel::removeOperator(User* user)
 
 void Channel::addMode(int mode)
 {
-    _mode += mode;
+    if (!(_mode & mode))
+        _mode += mode;
 }
 
 void Channel::removeMode(int mode)
 {
-    _mode -= mode;
+    if (_mode & mode)
+        _mode -= mode;
 }
 
 bool Channel::isOperator(User* user)
