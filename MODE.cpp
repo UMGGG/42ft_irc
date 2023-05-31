@@ -28,9 +28,26 @@ void Command::MODE()
         return;
     }
 
+    if (_params[0][0] != '#')
+        return ;
+
+    Channel* channel = _server->getChannel(_params[0]);
+
+    // is operator
+    if (!channel->isOperator(_sender))
+    {
+        // reply err
+        return;
+    }
+
     //todo
     std::string modes = _params[1]; //+k-k+ki
-    bool sign; // true == '+', false == '-'
+    std::string reply = ":" + _sender->getNick() + "!" + _sender->getUsername() + "@" + _sender->getIP() + " MODE " + _params[0];
+    std::vector<std::string> reply_params;
+    reply_params.push_back(""); // [0] == modified mode
+
+    bool sign = modes[0] == '+' ? true : false; // true == '+', false == '-'
+    bool success = false; // send reply only succes is true;
 
     std::vector<std::string> mode_params; // 4242 1234 4343
     // int param_idx = 0; // param_idx[0] == "4242", [1] == "1234", [2] == "4343"
@@ -46,80 +63,107 @@ void Command::MODE()
     // todo - set modes
     for (size_t i = 0; i < modes.length(); ++i)
     {
-        if (modes[i] == '+')
+        switch (modes[i])
         {
-            sign = true;
-            continue;
-        }
+            case '+':
+                sign = true;
+                break;
 
-        if (modes[i] == '-')
-        {
-            sign = false;
-            continue;
-        }
+            case '-':
+                sign = false;
+                break;
 
-        if (modes[i] == 'i')
-        {
-            if (sign)
-            {
-                //set i
-            }
-            else
-            {
-                //remove i
-            }
-            continue;
-        }
+            case 'i':
+                if (sign == true && !(channel->getMode() & MODE_I))
+                {
+                    success = true;
 
-        if (modes[i] == 'k')
-        {
-            if (sign) // sing == '+'
-            {
-                // set k
-            }
-            else
-            {
-                // remove k
-            }
-            continue;
-        }
+                    channel->addMode(MODE_I);
+                    reply_params[0] += "+i";
+                }
+                else if (sign == false && channel->getMode() & MODE_I)
+                {
+                    success = true;
 
-        if (modes[i] == 'l')
-        {
-            if (sign)
-            {
+                    channel->removeMode(MODE_I);
+                    reply_params[0] += "-i";
+                }
+                break;
 
-            }
-            else
-            {
+            case 'k':
+                if (sign == true)
+                {
 
-            }
-            continue;
-        }
+                }
+                else
+                {
+                    
+                }
+                break;
 
-        if (modes[i] == 'o')
-        {
-            if (sign)
-            {
+            case 'l':
+                if (sign == true)
+                {
 
-            }
-            else
-            {
+                }
+                else
+                {
+                    
+                }
+                break;
 
-            }
-            continue;
-        }
+            case 'o':
+                if (sign == true)
+                {
 
-        if (modes[i] == 't')
-        {
-            if (sign)
-            {
+                }
+                else
+                {
+                    
+                }
+                break;
 
-            }
-            else
-            {
+            case 't':
+                if (sign == true && !(channel->getMode() & MODE_T))
+                {
+                    success = true;
 
-            }
+                    channel->addMode(MODE_T);
+                    reply_params[0] += "+t";
+                }
+                else if (sign == false && channel->getMode() & MODE_T)
+                {
+                    success = true;
+
+                    channel->removeMode(MODE_T);
+                    reply_params[0] += "-t";
+                }
+                break;
+
+            default:
+                break;    
         }
     }
+
+    if (success)
+    {
+        // necessary ??
+        //remake reply_params[0];
+        // FROM +k+i+t-t-i+o
+        // TO   +kit-ti+o
+
+        // append reply_params
+        for (std::vector<std::string>::iterator it = reply_params.begin(); it != reply_params.end(); ++it)
+        {
+            if (it + 1 != reply_params.end())
+                reply += " " + *it;
+            else
+                reply += " :" + *it;
+        }
+        reply += "\r\n";
+        channel->sendReply(reply);
+    }
 }
+
+//reply with parameters
+//:qq!root@127.0.0.1 MODE #tradis -i+t-t+i-k+k-i+io 4242 4242 :root
