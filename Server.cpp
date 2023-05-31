@@ -63,7 +63,7 @@ void Server::startServer(int port)
                 _users.insert(std::pair<int, User*>(clientSock, newUser));
 
                 newUser->setIP(inet_ntoa(clientAddr.sin_addr));
-                std::cout << "connected (fd: " << clientSock << ", IPv4: " << newUser->getIP() << ")" << std::endl;
+                std::cout << "connected (FD: " << clientSock << ", IPv4: " << newUser->getIP() << ")" << std::endl << std::endl;
                 continue;
             }
 
@@ -73,9 +73,6 @@ void Server::startServer(int port)
                 // 연결 종료
                 if (it->revents & POLLHUP)
                 {
-                    //DEBUG
-                    std::cout << "POLLHUP disconnect" << std::endl;
-
                     disconnect(_users.at(it->fd));
                     continue;
                 }
@@ -86,9 +83,6 @@ void Server::startServer(int port)
                     if (_users.at(it->fd)->readMessage() <= 0)
                     //if (User::_state == DELETE)
                     {
-                        //DEBUG
-                        std::cout << "POLLIN disconnect" << std::endl;
-
                         disconnect(_users.at(it->fd));
                         continue;
                     }
@@ -110,8 +104,8 @@ void Server::startServer(int port)
 
 void Server::disconnect(User *user)
 {
-    std::cout << user->getNick() << " has left the server." << std::endl;
-    std::cout << "fd:" << user->getSocket() << " shutdown." << std::endl;
+    std::cout << user->getNick() << "(FD: " << user->getSocket() << ")" << " has left the server." << std::endl << std::endl;
+    std::cout << "FD: " << user->getSocket() << " shutdown."  << std::endl << std::endl;
 
     // leave joined channels;
     std::vector<Channel*> channels = user->getJoined();

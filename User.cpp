@@ -19,10 +19,10 @@ int User::readMessage()
 
     while (_message.find("\r\n") != std::string::npos)
     {
-        std::cout << "READ : " << _message << std::endl;
+        std::cout << "Recv from FD: " << _socket << ": " << _message.substr(0, _message.find("\r\n") + 2) << std::endl;
         Command command(_server, this);
         command.execute();
-        _message = _message.erase(0, _message.find("\r\n") + 2); // trim used message
+        _message.erase(0, _message.find("\r\n") + 2); // trim used message
     }
     if (_status == DELETE)
         return (-1);

@@ -12,7 +12,6 @@ Command::Command(Server *server, User *sender)
     if (message.find(':') != std::string::npos) // _trailing
     {
         _trailing.append(message.substr(message.find(':') + 1)); //(exclude ':')
-        // _trailing.append(message.substr(message.find(':'))); //(include ':')
         message.erase(message.find(':')); // message에서 _trailing 제거
     }
 
@@ -60,8 +59,7 @@ void Command::sendReply(int fd, std::string reply)
 	ret = send(fd, reply.c_str(), reply.size(), MSG_DONTWAIT);
 	if (ret == -1)
 		std::cerr << "Error: " << reply.c_str() << std::endl;
-	std::cout << "Send to client " << fd << std::endl;
-	std::cout << reply << std::endl;
+	std::cout << "Send to FD: " << fd << ": " << reply << std::endl;
 }
 
 void Command::connect()
@@ -88,6 +86,6 @@ void Command::connect()
         // RPL_MYINFO
         sendReply(socket, RPL_MYINFO(_server->getName(), _sender->getNick(), "-", "iklot"));
 
-        std::cout << _sender->getNick() << " has joined the server." << std::endl;
+        std::cout << _sender->getNick() << "(FD: " << _sender->getSocket() << ")" << " has joined the server." << std::endl << std::endl;
     }
 }

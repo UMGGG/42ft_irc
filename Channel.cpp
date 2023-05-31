@@ -16,8 +16,7 @@ void Channel::sendReply(std::string reply, User* except)
         while (it != _users.end())    
         {
             send((*it)->getSocket(), reply.c_str(), reply.size(), MSG_DONTWAIT);
-            std::cout << "Send to Channel : " << _name << std::endl;
-            std::cout << reply << std::endl;
+            std::cout << "Send to FD: " << (*it)->getSocket() << ": " << reply << std::endl;
             ++it;
         }
     }
@@ -29,9 +28,8 @@ void Channel::sendReply(std::string reply, User* except)
         {
             if (*it != except)
             {
-                std::cout << "Send to Channel : " << _name << std::endl;
-                std::cout << reply << std::endl;
                 send((*it)->getSocket(), reply.c_str(), reply.size(), MSG_DONTWAIT);
+                std::cout << "Send to FD: " << (*it)->getSocket() << ": " << reply << std::endl;
             }
             ++it;
         }
