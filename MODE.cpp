@@ -50,7 +50,7 @@ void Command::MODE()
     bool success = false; // send reply only succes is true;
 
     std::vector<std::string> mode_params; // 4242 1234 4343
-    // int param_idx = 0; // param_idx[0] == "4242", [1] == "1234", [2] == "4343"
+    int param_idx = 0; // param_idx[0] == "4242", [1] == "1234", [2] == "4343"
 
     // if there is more parameters following mode_option(_parmas[1])
     if (_params.size() > 2)
@@ -93,7 +93,6 @@ void Command::MODE()
             case 'k':
                 if (sign == true)
                 {
-
                 }
                 else
                 {
@@ -104,11 +103,36 @@ void Command::MODE()
             case 'l':
                 if (sign == true)
                 {
+                    // if (no param)
 
+                    // if (param == string)
+                    // channel->setLimit( 0 )
+
+                    // if (MODE_L && param == channel->getLimit)
+                    // break;
+
+                    success = true;
+                    
+                    channel->addMode(MODE_L);
+                    reply_params[0] += "+l";
+
+                    channel->setLimit(atoi(mode_params[param_idx].c_str()));
+
+                    std::string s = "";
+                    for (size_t i = 0; i < mode_params[param_idx].length(); ++i)
+                    {
+                        if (isdigit(mode_params[param_idx][i]))
+                            s += mode_params[param_idx][i];
+                        else
+                            break;
+                    }
+                    reply_params.push_back(s);
                 }
                 else
                 {
-                    
+                    success = true;
+                    channel->removeMode(MODE_L);
+                    reply_params[0] += "-l";
                 }
                 break;
 
@@ -141,6 +165,7 @@ void Command::MODE()
                 break;
 
             default:
+                // :irc.local 472 qq 3 :is not a recognised channel mode.
                 break;    
         }
     }
