@@ -68,21 +68,23 @@ void Command::MODE()
             mode_params.push_back(*it);
     }
 
-    // todo - set modes
+    // set modes
     for (size_t i = 0; i < modes.length(); ++i)
     {
         switch (modes[i])
         {
             case '+':
+            {
                 sign = true;
                 break;
-
+            }
             case '-':
+            {
                 sign = false;
                 break;
-
+            }
             case 'i':
-                
+            {   
                 if (sign == true && !(channel->getMode() & MODE_I))
                 {
                     success = true;
@@ -98,24 +100,44 @@ void Command::MODE()
                     reply_params[0] += "-i";
                 }
                 break;
-
+            }
             case 'k':
+            {
                 // no parameter
                 if ((size_t)param_idx + 1 > mode_params.size())
                 {
                     sendReply(_sender->getSocket(), ERR_INVALIDMODEPARAM(_server->getName(), _sender->getNick(), _params[0], "k", "*"));
                     break;
                 }
-                if (sign == true)
+
+                std::string key = mode_params[param_idx];
+                ++param_idx;
+
+                if (sign == true && !(channel->getMode() & MODE_K))
                 {
+                    success = true;
+                    channel->addMode(MODE_K);
+                    reply_params[0] += "+k";
+                    channel->setKey(key);
+                    reply_params.push_back(key);
                 }
-                else
+                else if (sign == false && channel->getMode() & MODE_K)
                 {
-                    
+                    // incorrect key - 467 error
+                    if (channel->getKey().compare(key))
+                    {
+                        sendReply(_sender->getSocket(), ERR_KEYSET(_server->getName(), _sender->getNick(), _params[0]));
+                        break;
+                    }
+                    success = true;
+                    channel->removeMode(MODE_K);
+                    reply_params[0] += "-k";
+                    reply_params.push_back(key);
                 }
                 break;
-
+            }
             case 'l':
+            {
                 if (sign == true) // need parameter
                 {
                     // no parameter
@@ -125,8 +147,11 @@ void Command::MODE()
                         break;
                     }
 
+                    std::string param = mode_params[param_idx];
+                    ++param_idx;
+
                     // set limit
-                    int limit = atoi(mode_params[param_idx].c_str());
+                    int limit = atoi(param.c_str());
                     
                     // if (already set same _limit)
                     if (channel->getMode() & MODE_L && (size_t)limit == channel->getLimit())
@@ -140,17 +165,16 @@ void Command::MODE()
                     channel->setLimit(limit);
 
                     std::string s = "";
-                    for (size_t i = 0; i < mode_params[param_idx].length(); ++i)
+                    for (size_t i = 0; i < param.length(); ++i)
                     {
-                        if (isdigit(mode_params[param_idx][i]))
-                            s += mode_params[param_idx][i];
+                        if (isdigit(param[i]))
+                            s += param[i];
                         else
                             break;
                     }
                     if (s.empty())
                         s = "0";
                     reply_params.push_back(s);
-                    ++param_idx;
                 }
                 else if (sign == false && channel->getMode() & MODE_L) // don't need parameter
                 {
@@ -159,8 +183,9 @@ void Command::MODE()
                     reply_params[0] += "-l";
                 }
                 break;
-
+            }
             case 'o':
+            {
                 // no parameter
                 if ((size_t)param_idx + 1 > mode_params.size())
                 {
@@ -168,8 +193,10 @@ void Command::MODE()
                     break;
                 }
 
-                User* target;
-                target = channel->getUser(mode_params[param_idx]);
+                std::string param = mode_params[param_idx];
+                ++param_idx;
+
+                User* target = channel->getUser(param);
                 if (target == NULL)
                     break;
 
@@ -180,7 +207,6 @@ void Command::MODE()
                     reply_params[0] += "+o";
 
                     reply_params.push_back(target->getNick());
-                    ++param_idx;
                 }
                 else if (sign == false && channel->isOperator(target))
                 {
@@ -189,11 +215,11 @@ void Command::MODE()
                     reply_params[0] += "-o";
 
                     reply_params.push_back(target->getNick());
-                    ++param_idx;
                 }
                 break;
-
+            }
             case 't':
+            {
                 if (sign == true && !(channel->getMode() & MODE_T))
                 {
                     success = true;
@@ -209,10 +235,12 @@ void Command::MODE()
                     reply_params[0] += "-t";
                 }
                 break;
-
+            }
             default:
+            {
                 // :irc.local 472 qq 3 :is not a recognised channel mode.
-                break;    
+                break;
+            }
         }
     }
 
