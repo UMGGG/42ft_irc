@@ -55,6 +55,7 @@
 //deop
 #define RPL_DEOP(nick, name, ip, channel, target)		":" + nick + "!" + name + "@" + ip + " MODE " + channel + " -o " + target + "\r\n"
 //mode_channel
+#define RPL_CHANNELMODEIS(server, nick, channel, param) ":" + server + " 324 " + nick + " " + channel + param + "\r\n"
 #define RPL_CHANNELMODEMSG(nick, name, ip, channel, mode)	":" + nick + "!" + name + "@" + ip + " MODE " + channel + " :" + mode + "\r\n"
 #define RPL_CHANNELMODEMSGPARAM(nick, name, ip, channel, mode, param)	": :" + nick + "!" + name + "@" + ip + " MODE " + channel + " " + mode + " " + param "\r\n"
 #define ERR_UNKNOWNMODE(server, nick, mode)         ":" + server + " 472 " + nick + " " + mode + " :is not a recognised channel mode.\r\n"
