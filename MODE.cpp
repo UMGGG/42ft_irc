@@ -21,7 +21,6 @@ void Command::MODE()
     if (_params[0][0] != '#') // this is user mode command (ignore)
         return ;
 
-    //todo
     // no mode option (show current channel's mode)
     if (_params.size() == 1)
     {
@@ -36,7 +35,50 @@ void Command::MODE()
         // reply (current channel's mode)
         // :irc.local 324 qwer #tradis +knt :<key>
         // :irc.local 329 qwer #tradis :1685442445
+        // iklot
+        std::string message = "";
+        std::vector<std::string> param_message;
+        std::string list = "+";
+        std::string key = "";
+        std::string limit = "";
 
+        int mode = channel->getMode();
+
+        if (mode & MODE_I)
+            list += "i";
+        if (mode & MODE_K)
+        {
+            list += "k";
+            if (_sender->isJoined(_params[0])) // _sender who is joined can get key
+                key = channel->getKey();
+            else
+                key = "<key>"; // hide key to not on this channel
+        }
+        if (mode & MODE_L)
+        {
+            std::stringstream sstream;
+            sstream << channel->getLimit();
+
+            list += "l";
+            limit = sstream.str();
+        }
+        if (mode & MODE_T)
+            list += "t";
+        
+        param_message.push_back(list);
+        if (!key.empty())
+            param_message.push_back(key);
+        if (!limit.empty())
+            param_message.push_back(limit);
+
+        for (std::vector<std::string>::iterator it = param_message.begin(); it != param_message.end(); ++it)
+        {
+            if (it + 1 != param_message.end())
+                message += " " + *it;
+            else
+                message += " :" + *it;
+        }
+        sendReply(_sender->getSocket(), RPL_CHANNELMODEIS(_server->getName(), _sender->getNick(), _params[0], message));
         return;
     }
 
@@ -164,17 +206,19 @@ void Command::MODE()
 
                     channel->setLimit(limit);
 
-                    std::string s = "";
-                    for (size_t i = 0; i < param.length(); ++i)
-                    {
-                        if (isdigit(param[i]))
-                            s += param[i];
-                        else
-                            break;
-                    }
-                    if (s.empty())
-                        s = "0";
-                    reply_params.push_back(s);
+                    // std::string s = "";
+                    // for (size_t i = 0; i < param.length(); ++i)
+                    // {
+                    //     if (isdigit(param[i]))
+                    //         s += param[i];
+                    //     else
+                    //         break;
+                    // }
+                    // if (s.empty())
+                    //     s = "0";
+                    std::stringstream sstream;
+                    sstream << limit;
+                    reply_params.push_back(sstream.str());
                 }
                 else if (sign == false && channel->getMode() & MODE_L) // don't need parameter
                 {
