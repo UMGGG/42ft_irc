@@ -21,6 +21,7 @@ void Command::MODE()
     if (_params[0][0] != '#') // this is user mode command (ignore)
         return ;
 
+    //todo
     // no mode option (show current channel's mode)
     if (_params.size() == 1)
     {
@@ -39,16 +40,15 @@ void Command::MODE()
         return;
     }
 
-    // is operator
+    // not an operator
     if (!channel->isOperator(_sender))
     {
-        // reply err
-        //:irc.local 482 root_ #a :You must have channel op access or above to set channel mode i
         sendReply(_sender->getSocket(), ERR_CHANOPRIVSNEEDED(_server->getName(), _sender->getNick(), _params[0]));
         return;
     }
 
-    //todo
+    // if command is ...
+    // MODE #channel +k-k+ki 4242 1234 4343
     std::string modes = _params[1]; //+k-k+ki
     std::string reply = ":" + _sender->getNick() + "!" + _sender->getUsername() + "@" + _sender->getIP() + " MODE " + _params[0];
     std::vector<std::string> reply_params;
@@ -100,6 +100,12 @@ void Command::MODE()
                 break;
 
             case 'k':
+                // no parameter
+                if ((size_t)param_idx + 1 > mode_params.size())
+                {
+                    sendReply(_sender->getSocket(), ERR_INVALIDMODEPARAM(_server->getName(), _sender->getNick(), _params[0], "k", "*"));
+                    break;
+                }
                 if (sign == true)
                 {
                 }
@@ -112,8 +118,7 @@ void Command::MODE()
             case 'l':
                 if (sign == true) // need parameter
                 {
-                    // if (no param)
-                    //:irc.local 696 root #a l * :You must specify a parameter for the limit mode. Syntax: <limit>.
+                    // no parameter
                     if ((size_t)param_idx + 1 > mode_params.size())
                     {
                         sendReply(_sender->getSocket(), ERR_INVALIDMODEPARAM(_server->getName(), _sender->getNick(), _params[0], "l", "*"));
@@ -123,8 +128,7 @@ void Command::MODE()
                     // set limit
                     int limit = atoi(mode_params[param_idx].c_str());
                     
-                    // if (MODE_L && param == channel->getLimit)
-                    // break;
+                    // if (already set same _limit)
                     if (channel->getMode() & MODE_L && (size_t)limit == channel->getLimit())
                         break;
 
@@ -157,13 +161,35 @@ void Command::MODE()
                 break;
 
             case 'o':
-                if (sign == true)
+                // no parameter
+                if ((size_t)param_idx + 1 > mode_params.size())
                 {
-
+                    sendReply(_sender->getSocket(), ERR_INVALIDMODEPARAM(_server->getName(), _sender->getNick(), _params[0], "o", "*"));
+                    break;
                 }
-                else
+
+                User* target;
+                target = channel->getUser(mode_params[param_idx]);
+                if (target == NULL)
+                    break;
+
+                if (sign == true && !channel->isOperator(target))
                 {
-                    
+                    success = true;
+                    channel->addOperator(target);
+                    reply_params[0] += "+o";
+
+                    reply_params.push_back(target->getNick());
+                    ++param_idx;
+                }
+                else if (sign == false && channel->isOperator(target))
+                {
+                    success = true;
+                    channel->removeOperator(target);
+                    reply_params[0] += "-o";
+
+                    reply_params.push_back(target->getNick());
+                    ++param_idx;
                 }
                 break;
 
