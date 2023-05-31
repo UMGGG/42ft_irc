@@ -206,16 +206,6 @@ void Command::MODE()
 
                     channel->setLimit(limit);
 
-                    // std::string s = "";
-                    // for (size_t i = 0; i < param.length(); ++i)
-                    // {
-                    //     if (isdigit(param[i]))
-                    //         s += param[i];
-                    //     else
-                    //         break;
-                    // }
-                    // if (s.empty())
-                    //     s = "0";
                     std::stringstream sstream;
                     sstream << limit;
                     reply_params.push_back(sstream.str());
