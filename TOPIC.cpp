@@ -21,7 +21,7 @@ void Command::TOPIC()
 		_sender->getServer()->getChannel(this->_params[0])->sendReply(message);
 		return ;
 	}
-	else // 이건 client에서 관리되는듯?? 나중에 수정해야함
+	else //topic을 설정하는게아니고 topic을 불러오는건 client에서 관리되는듯?? 나중에 수정해야함
 	{
 		if (_sender->getServer()->getChannel(this->_params[0])->getTopic() == "")
 		{
@@ -36,5 +36,5 @@ void Command::TOPIC()
 			return ;
 		}
 	}
-	// topic지정한 시간(333 RPL_TOPICWHOTIME)도 설정해야함, 뒤늦게 join할때 topic을 332로 넘겨줘야 함
+	// topic지정한 시간(333 RPL_TOPICWHOTIME)도 설정해야함, join할때 현재의 topic을 332로, topic을 설정했던 시간과 설정한nick을 333으로 넘겨줘야 함
 }
