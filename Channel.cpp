@@ -5,7 +5,7 @@ Channel::Channel()
 {
 }
 
-void Channel::sendReply(std::string& reply, User* except)
+void Channel::sendReply(std::string reply, User* except)
 {
     std::vector<User*>::iterator it = _users.begin();
 

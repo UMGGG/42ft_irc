@@ -60,7 +60,7 @@ public:
     Channel();
     // Channel(std::string name, User *creater);
 
-    void sendReply(std::string& reply, User* except = NULL);
+    void sendReply(std::string reply, User* except = NULL);
     User* getUser(std::string& nick);
     bool isOperator(User* user);
     bool empty();
