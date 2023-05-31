@@ -29,12 +29,6 @@ void Command::TOPIC()
 			_sender->getServer()->getChannel(this->_params[0])->sendReply(message);
 			return ;
 		}
-		else
-		{
-			std::string message = RPL_TOPIC(_sender->getServer()->getName(), _sender->getNick(), this->_params[0], _sender->getServer()->getChannel(this->_params[0])->getTopic());
-			_sender->getServer()->getChannel(this->_params[0])->sendReply(message);
-			return ;
-		}
 	}
 	// topic을 지정한 시간, 저장한 유저 정보도 저장해야함 (333 RPL_TOPICWHOTIME 참조)
 	// join할때 현재의 topic을 332로, topic을 설정했던 시간과 설정한nick을 333으로 넘겨줘야 함

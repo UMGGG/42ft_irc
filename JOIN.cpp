@@ -30,7 +30,7 @@ void Command::JOIN()
     nameStream.str(_params[0]);
     if (_params.size() > 1)
         keyStream.str(_params[1]);
-    
+
     while (std::getline(nameStream, nameBuf, ','))
     {
         nameKey.insert(std::pair<std::string, std::string>(nameBuf, ""));
@@ -73,7 +73,7 @@ void Command::JOIN()
         }
         // Join already exist
         else
-        {   
+        {
             // if ( already in this channel ) ignore
             if (_sender->isJoined(it->first))
                 continue;
@@ -89,7 +89,7 @@ void Command::JOIN()
                 if (channel->getMode() & MODE_K && channel->getKey().compare(it->second))
                 // mode +k but incorrect key
                 {
-                    sendReply(_sender->getSocket(), ERR_BADCHANNELKEY(_server->getName(), _sender->getNick(), it->first));    
+                    sendReply(_sender->getSocket(), ERR_BADCHANNELKEY(_server->getName(), _sender->getNick(), it->first));
                     continue;
                 }
 
@@ -130,6 +130,9 @@ void Command::JOIN()
 
         // send
         channel->sendReply(reply);
+        if (_sender->getServer()->getChannel(this->_params[0])->getTopic() != "")
+            sendReply(_sender->getSocket(), RPL_TOPIC(_sender->getServer()->getName(), _sender->getNick(), this->_params[0], _sender->getServer()->getChannel(this->_params[0])->getTopic()));
+        // 333 RPL_TOPICWHOTIME 전송하도록 추가해야함
         sendReply(_sender->getSocket(), RPL_NAMEREPLY(_server->getName(), _sender->getNick(), it->first, userList));
         sendReply(_sender->getSocket(), RPL_ENDOFNAMES(_server->getName(), _sender->getNick(), it->first));
     }
