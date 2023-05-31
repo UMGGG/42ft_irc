@@ -24,12 +24,12 @@ private:
     std::vector<User*> _operators; // Operators of this channel
 
     std::string _topic; // Channel's topic
-    
+
     int _mode;
     std::string _key;
     size_t _limit;
-    
-    
+
+
     /*
     MODE
 
@@ -54,8 +54,8 @@ private:
 
     => 유효하지 않은 메시지는 reply하지 않음
     e.g. operator가 아닌 user에게 mode -o를 하는 경우
-    */ 
-   
+    */
+
 public:
     Channel();
     // Channel(std::string name, User *creater);
@@ -69,6 +69,7 @@ public:
     void setName(std::string name);
     void setKey(std::string key);
     void setLimit(size_t limit);
+    void setTopic(std::string topic);
 
     void addUser(User* user);
     void addOperator(User* user);
@@ -86,6 +87,7 @@ public:
     int getMode() const;
     std::string getKey() const;
     size_t getLimit() const;
+    std::string getTopic() const;
 };
 
 #endif

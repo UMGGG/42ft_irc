@@ -30,6 +30,7 @@ Command::Command(Server *server, User *sender)
 
 void Command::execute()
 {
+    _sender->setPingtime();
     if (!_command.compare("PASS"))
         PASS();
     else if (!_command.compare("NICK"))
@@ -50,6 +51,8 @@ void Command::execute()
         MODE();
     else if (!_command.compare("KICK"))
         KICK();
+    else if (!_command.compare("TOPIC"))
+        TOPIC();
 }
 
 void Command::sendReply(int fd, std::string reply)

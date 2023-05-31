@@ -12,7 +12,6 @@ void Command::KICK()
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[1]));
 		return ;
-
 	} // op권한이 없을때
 	else if (_sender->getServer()->getChannel(this->_params[0])->isOperator(_sender) == false)
 	{

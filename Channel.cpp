@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 Channel::Channel()
-: _name(""), _topic("default topic"), _mode(MODE_T), _key(""), _limit(0)
+: _name(""), _topic(""), _mode(MODE_T), _key(""), _limit(0)
 {
 }
 
@@ -13,7 +13,7 @@ void Channel::sendReply(std::string reply, User* except)
     // JOIN PART MODE...
     if (except == NULL)
     {
-        while (it != _users.end())    
+        while (it != _users.end())
         {
             send((*it)->getSocket(), reply.c_str(), reply.size(), MSG_DONTWAIT);
             std::cout << "Send to FD: " << (*it)->getSocket() << ": " << reply << std::endl;
@@ -24,7 +24,7 @@ void Channel::sendReply(std::string reply, User* except)
     // PRIVMSG, QUIT ...
     else
     {
-        while (it != _users.end())    
+        while (it != _users.end())
         {
             if (*it != except)
             {
@@ -174,6 +174,11 @@ void Channel::setLimit(size_t limit)
     _limit = limit;
 }
 
+void Channel::setTopic(std::string topic)
+{
+    _topic = topic;
+}
+
 void Channel::addUser(User* user)
 {
     _users.push_back(user);
@@ -212,4 +217,9 @@ std::string Channel::getKey() const
 size_t Channel::getLimit() const
 {
     return _limit;
+}
+
+std::string Channel::getTopic() const
+{
+    return _topic;
 }

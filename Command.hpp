@@ -37,6 +37,7 @@ public:
     void PONG();
     void MODE();
     void KICK();
+    void TOPIC();
 };
 
 #endif
