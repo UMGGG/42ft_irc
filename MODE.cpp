@@ -282,7 +282,9 @@ void Command::MODE()
             }
             default:
             {
+                //unknown mode character
                 // :irc.local 472 qq 3 :is not a recognised channel mode.
+                sendReply(_sender->getSocket(), ERR_UNKNOWNMODE(_server->getName(), _sender->getNick(), modes[i]));
                 break;
             }
         }
