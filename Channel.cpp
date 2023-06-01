@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 Channel::Channel()
-: _name(""), _topic(""), _mode(MODE_T), _key(""), _limit(0)
+: _name(""), _topic(""), _setter(""), _time(0), _mode(MODE_T), _key(""), _limit(0)
 {
 }
 
@@ -179,6 +179,16 @@ void Channel::setTopic(std::string topic)
     _topic = topic;
 }
 
+void Channel::setSetter(std::string setter)
+{
+    _setter = setter;
+}
+
+void Channel::setTime(time_t time)
+{
+    _time = time;
+}
+
 void Channel::addUser(User* user)
 {
     _users.push_back(user);
@@ -222,4 +232,14 @@ size_t Channel::getLimit() const
 std::string Channel::getTopic() const
 {
     return _topic;
+}
+
+std::string Channel::getSetter() const
+{
+    return _setter;
+}
+
+time_t Channel::getTime() const
+{
+    return _time;
 }

@@ -17,6 +17,8 @@ void Command::TOPIC()
 	if (this->_trailing.empty() == false)
 	{
 		_sender->getServer()->getChannel(this->_params[0])->setTopic(this->_trailing);
+		_sender->getServer()->getChannel(this->_params[0])->setSetter(_sender->getNick() + "!" + _sender->getUsername() + "@" + _sender->getIP());
+		_sender->getServer()->getChannel(this->_params[0])->setTime(time(NULL));
 		std::string message = RPL_SETTOPIC(_sender->getNick(), _sender->getUsername(), _sender->getIP(), this->_params[0], this->_trailing);
 		_sender->getServer()->getChannel(this->_params[0])->sendReply(message);
 		return ;

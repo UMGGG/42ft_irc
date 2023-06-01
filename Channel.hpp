@@ -24,6 +24,8 @@ private:
     std::vector<User*> _operators; // Operators of this channel
 
     std::string _topic; // Channel's topic
+    std::string _setter; // Channel's topic setter
+    time_t _time; // Channel's topic set time
 
     int _mode;
     std::string _key;
@@ -70,6 +72,8 @@ public:
     void setKey(std::string key);
     void setLimit(size_t limit);
     void setTopic(std::string topic);
+    void setSetter(std::string setter);
+    void setTime(time_t time);
 
     void addUser(User* user);
     void addOperator(User* user);
@@ -88,6 +92,8 @@ public:
     std::string getKey() const;
     size_t getLimit() const;
     std::string getTopic() const;
+    std::string getSetter() const;
+    time_t getTime() const;
 };
 
 #endif

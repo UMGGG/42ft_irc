@@ -131,8 +131,12 @@ void Command::JOIN()
         // send
         channel->sendReply(reply);
         if (_sender->getServer()->getChannel(this->_params[0])->getTopic() != "")
+        {
             sendReply(_sender->getSocket(), RPL_TOPIC(_sender->getServer()->getName(), _sender->getNick(), this->_params[0], _sender->getServer()->getChannel(this->_params[0])->getTopic()));
-        // 333 RPL_TOPICWHOTIME 전송하도록 추가해야함
+            std::stringstream strTime;
+            strTime << _sender->getServer()->getChannel(this->_params[0])->getTime();
+            sendReply(_sender->getSocket(), RPL_TOPICWHOTIME(_sender->getServer()->getName(), _sender->getNick(), this->_params[0], _sender->getServer()->getChannel(this->_params[0])->getSetter(), strTime.str()));
+        }
         sendReply(_sender->getSocket(), RPL_NAMEREPLY(_server->getName(), _sender->getNick(), it->first, userList));
         sendReply(_sender->getSocket(), RPL_ENDOFNAMES(_server->getName(), _sender->getNick(), it->first));
     }
