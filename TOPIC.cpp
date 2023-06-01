@@ -32,6 +32,4 @@ void Command::TOPIC()
 			return ;
 		}
 	}
-	// topic을 지정한 시간, 저장한 유저 정보도 저장해야함 (333 RPL_TOPICWHOTIME 참조)
-	// join할때 현재의 topic을 332로, topic을 설정했던 시간과 설정한nick을 333으로 넘겨줘야 함
 }
