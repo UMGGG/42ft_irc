@@ -8,8 +8,8 @@ void Command::TOPIC()
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
-	} // op만 할 수 있고, op권한이 없을때(MODE에서 k옵션 들어있는지 불러와서 확인해야함)
-	else if (_server->getChannel(this->_params[0])->isOperator(_sender) == false)
+	} // op만 할 수 있고 +  op권한이 없을때
+	else if ((_server->getChannel(this->_params[0])->getMode() & MODE_T) && _server->getChannel(this->_params[0])->isOperator(_sender) == false)
 	{
 		sendReply(_sender->getSocket(), ERR_CHANOPRIVSNEEDED_TOPIC(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
