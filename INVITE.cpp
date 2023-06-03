@@ -21,4 +21,5 @@ void Command::INVITE()
 	// user의 _invited에 초대 추가하기
 	sendReply(_sender->getSocket(), RPL_INVITING(_sender->getNick(), _server->getName(), this->_params[0], this->_params[1]));
 	sendReply(_server->getUser(this->_params[0])->getSocket(), RPL_INVITED(_sender->getNick(), _sender->getUsername(), _sender->getIP(), this->_params[0], this->_params[1]));
+	// invite 어떻게 작동하는지
 }
