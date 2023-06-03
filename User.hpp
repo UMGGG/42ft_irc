@@ -71,7 +71,9 @@ public:
     void setPingtime();
 
     void addJoined(Channel* channel);
+    void addInvited(Channel* channel);
     void removeJoined(Channel* channel);
+    void removeInvited(Channel* channel);
 
     //getters
     Server *getServer();

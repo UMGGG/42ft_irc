@@ -116,12 +116,25 @@ void User::addJoined(Channel* channel)
     _joined.push_back(channel);
 }
 
+void User::addInvited(Channel* channel)
+{
+    _invited.push_back(channel);
+}
+
 void User::removeJoined(Channel* channel)
 {
     std::vector<Channel *>::iterator target = std::find(_joined.begin(), _joined.end(), channel);
 
     if (target != _joined.end())
         _joined.erase(target);
+}
+
+void User::removeInvited(Channel* channel)
+{
+    std::vector<Channel *>::iterator target = std::find(_invited.begin(), _invited.end(), channel);
+
+    if (target != _invited.end())
+        _invited.erase(target);
 }
 
 void User::setPingtime()
