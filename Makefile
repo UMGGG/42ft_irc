@@ -14,7 +14,9 @@ PART.cpp \
 PONG.cpp \
 MODE.cpp \
 KICK.cpp \
-TOPIC.cpp
+TOPIC.cpp \
+INVITE.cpp
+
 OBJS = $(SRCS:.cpp=.o)
 
 .cpp.o :

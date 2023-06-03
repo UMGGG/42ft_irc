@@ -53,6 +53,8 @@ void Command::execute()
         KICK();
     else if (!_command.compare("TOPIC"))
         TOPIC();
+    else if (!_command.compare("INVITE"))
+        INVITE();
 }
 
 void Command::sendReply(int fd, std::string reply)

@@ -38,6 +38,7 @@ public:
     void MODE();
     void KICK();
     void TOPIC();
+    void INVITE();
 };
 
 #endif

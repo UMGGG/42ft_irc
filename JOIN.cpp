@@ -132,10 +132,10 @@ void Command::JOIN()
         channel->sendReply(reply);
         if (channel->getTopic() != "")
         {
-            sendReply(_sender->getSocket(), RPL_TOPIC(_sender->getServer()->getName(), _sender->getNick(), channel->getName(), channel->getTopic()));
+            sendReply(_sender->getSocket(), RPL_TOPIC(_server->getName(), _sender->getNick(), channel->getName(), channel->getTopic()));
             std::stringstream strTime;
             strTime << channel->getTime();
-            sendReply(_sender->getSocket(), RPL_TOPICWHOTIME(_sender->getServer()->getName(), _sender->getNick(), channel->getName(), channel->getSetter(), strTime.str()));
+            sendReply(_sender->getSocket(), RPL_TOPICWHOTIME(_server->getName(), _sender->getNick(), channel->getName(), channel->getSetter(), strTime.str()));
         }
         sendReply(_sender->getSocket(), RPL_NAMEREPLY(_server->getName(), _sender->getNick(), it->first, userList));
         sendReply(_sender->getSocket(), RPL_ENDOFNAMES(_server->getName(), _sender->getNick(), it->first));

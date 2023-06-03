@@ -39,6 +39,7 @@
 //invite
 #define RPL_INVITING(nick, server, target, channel)	":" + server + " 341 " + nick + " " + target + " " + channel + "\r\n"
 #define RPL_INVITED(nick, name, ip, target, channel)	":" + nick + "!" + name + "@" + ip + " INVITE " + target + " :" + channel + "\r\n"
+#define ERR_USERONCHANNEL(nick, server, channel, target)		":" + server + " 443 " + nick + " " + target + " " + channel + " :is already on channel\r\n"
 //nick
 #define RPL_NICK(nick, name, ip , newnick)				":" + nick + "!" + name + "@" + ip + " NICK :" + newnick + "\r\n"
 #define ERR_NICKNAMEINUSE(server, nick, newnick)	":" + server + " 433 " + nick + " " + newnick + " :Nickname is already in use." + "\r\n"
