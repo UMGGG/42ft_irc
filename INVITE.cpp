@@ -20,6 +20,6 @@ void Command::INVITE()
 	}
 	sendReply(_sender->getSocket(), RPL_INVITING(_sender->getNick(), _server->getName(), this->_params[0], this->_params[1]));
 	sendReply(_server->getUser(this->_params[0])->getSocket(), RPL_INVITED(_sender->getNick(), _sender->getUsername(), _sender->getIP(), this->_params[0], this->_params[1]));
-	_server->getUser(this->_params[0])->isInvited(_server->getChannel(this->_params[1]));
+	_server->getUser(this->_params[0])->isInvited(_server->getChannel(this->_params[1])); // 있다면 삭제되고 없다면 아무일도 안일어남
 	_server->getUser(this->_params[0])->addInvited(_server->getChannel(this->_params[1]));
 }
