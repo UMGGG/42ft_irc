@@ -2,8 +2,12 @@
 
 void Command::INVITE()
 {
-	// 없는 채널
-	if (_server->getChannel(this->_params[1]) == NULL)
+	if (this->_params.size() < 1)
+	{
+		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "INVITE"));
+		return;
+	}	// 없는 채널
+	else if (_server->getChannel(this->_params[1]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[1]));
 		return ;

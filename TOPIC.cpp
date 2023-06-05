@@ -2,9 +2,12 @@
 
 void Command::TOPIC()
 {
-	std::cout << this->_trailing << std::endl;
-	//채널에 존재하지않을때, 채널이 없을때
-	if (_server->getChannel(this->_params[0]) == NULL)
+	if (this->_params.size() < 1)
+	{
+		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "INVITE"));
+		return;
+	}//채널에 존재하지않을때, 채널이 없을때
+	else if (_server->getChannel(this->_params[0]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;

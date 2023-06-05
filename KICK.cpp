@@ -2,8 +2,12 @@
 
 void Command::KICK()
 {
-	// 내가 채널에 없거나 없는 채널일 때
-	if (_server->getChannel(this->_params[0]) == NULL)
+	if (this->_params.size() < 1)
+	{
+		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "KICK"));
+		return;
+	}// 내가 채널에 없거나 없는 채널일 때
+	else if (_server->getChannel(this->_params[0]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
