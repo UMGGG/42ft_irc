@@ -24,6 +24,12 @@ void Command::KICK()
 	}
 	// 채널목록에서 유저 제외, 강퇴당했다고 채널 전체 유저에게 메시지
 	std::string message = RPL_KICK(_sender->getNick(), _sender->getUsername(), _sender->getIP(), this->_params[0], this->_params[1], this->_trailing);
-	_sender->getServer()->getChannel(this->_params[0])->sendReply(message);
-	_sender->getServer()->getChannel(this->_params[0])->removeUser(_sender->getServer()->getChannel(this->_params[0])->getUser(this->_params[1]));
+	_server->getChannel(this->_params[0])->sendReply(message);
+	_server->getUser(this->_params[1])->removeJoined(_server->getChannel(this->_params[0]));
+	_server->getChannel(this->_params[0])->removeUser(_server->getChannel(this->_params[0])->getUser(this->_params[1]));
+	if (_server->getChannel(this->_params[0])->empty())
+	{
+	delete _server->getChannel(this->_params[0]);
+	_server->removeChannel(_server->getChannel(this->_params[0]));
+	}
 }
