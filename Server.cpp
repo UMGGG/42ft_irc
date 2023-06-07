@@ -96,10 +96,10 @@ void Server::startServer(int port)
             time_t checktime = time(NULL);
             if ((int)(checktime - uit->second->getPingtime()) > 120)
             {
-                std::cout << "PING timeover (fd: " << uit->second->getNick() << std::endl;
+                std::cout << "PING timeover (fd: " << uit->first << ")" << std::endl;
                 //클라이언트 없에기
                 disconnect(_users.at(uit->first));
-                continue;
+                break;
             }
             uit++;
         }
