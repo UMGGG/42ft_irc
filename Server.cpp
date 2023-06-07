@@ -26,14 +26,28 @@ void Server::startServer(int port)
     int polled;
 
     listenSock = socket(PF_INET, SOCK_STREAM, 0);
+    if (listenSock == -1)
+    {
+        std::cout << "socket error at server start" << std::endl;
+        exit(1);
+    }
     ft_bzero(&listenAddr, sizeof(listenAddr));
     listenAddr.sin_family = AF_INET;
     listenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     listenAddr.sin_port = htons(port);
 
-    bind(listenSock, (struct sockaddr*)&listenAddr, sizeof(listenAddr));
-    listen(listenSock, 512);
-
+    if (bind(listenSock, (struct sockaddr*)&listenAddr, sizeof(listenAddr)) == -1)
+    {
+        std::cout << "bind error at server start" << std::endl;
+        close(listenSock);
+        exit(1);
+    }
+    if (listen(listenSock, 512) == -1)
+    {
+        std::cout << "listen error at server start" << std::endl;
+        close(listenSock);
+        exit(1);
+    }
     struct pollfd listenPoll;
     listenPoll.fd = listenSock;
     listenPoll.events = POLLIN;
@@ -49,6 +63,12 @@ void Server::startServer(int port)
             {
                 clientAddrSize = sizeof(clientAddr);
                 clientSock = accept(listenSock, (struct sockaddr *)&clientAddr, &clientAddrSize);
+                if (clientSock == -1)
+                {
+                    std::cout << "accept error" << std::endl;
+                    close(clientSock);
+                    continue;
+                }
                 fcntl(clientSock, F_SETFL, O_NONBLOCK);
 
                 struct pollfd newPoll;
