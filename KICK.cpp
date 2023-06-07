@@ -22,7 +22,7 @@ void Command::KICK()
 		sendReply(_sender->getSocket(), ERR_CHANOPRIVSNEEDED(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
 	}
-	// 채널목록에서 유저 제외, 강퇴당했다고 채널 전체 유저에게 메시지
+	// 유저의 채널목록, 채널의 유저목록에서 각각 제외, 강퇴당했다고 채널 전체 유저에게 메시지
 	std::string message = RPL_KICK(_sender->getNick(), _sender->getUsername(), _sender->getIP(), this->_params[0], this->_params[1], this->_trailing);
 	_server->getChannel(this->_params[0])->sendReply(message);
 	_server->getUser(this->_params[1])->removeJoined(_server->getChannel(this->_params[0]));
