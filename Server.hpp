@@ -14,6 +14,8 @@
 #include <map>
 #include <vector>
 
+#include <exception>
+
 class User;
 class Channel;
 

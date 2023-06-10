@@ -10,9 +10,12 @@ Server::~Server()
     // free allocated memories
     for (std::map<int, User*>::iterator it = _users.begin(); it != _users.end(); ++it)
         delete it->second;
-
     for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
         delete *it;
+
+    // close every socket
+    for (std::vector<struct pollfd>::iterator it = _pollFD.begin(); it != _pollFD.end(); ++it)
+        close(it->fd);
 }
 
 static void ft_bzero(void *s, size_t n)
@@ -37,10 +40,7 @@ void Server::startServer(int port)
 
     listenSock = socket(PF_INET, SOCK_STREAM, 0);
     if (listenSock == -1)
-    {
-        std::cout << "socket error at server start" << std::endl;
-        exit(1);
-    }
+        throw std::runtime_error("socket error at server start");
     ft_bzero(&listenAddr, sizeof(listenAddr));
     listenAddr.sin_family = AF_INET;
     listenAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -48,15 +48,13 @@ void Server::startServer(int port)
 
     if (bind(listenSock, (struct sockaddr*)&listenAddr, sizeof(listenAddr)) == -1)
     {
-        std::cout << "bind error at server start" << std::endl;
         close(listenSock);
-        exit(1);
+        throw std::runtime_error("bind error at server start");
     }
     if (listen(listenSock, 512) == -1)
     {
-        std::cout << "listen error at server start" << std::endl;
         close(listenSock);
-        exit(1);
+        throw std::runtime_error("listen error at server start");
     }
     struct pollfd listenPoll;
     listenPoll.fd = listenSock;
@@ -75,8 +73,7 @@ void Server::startServer(int port)
                 clientSock = accept(listenSock, (struct sockaddr *)&clientAddr, &clientAddrSize);
                 if (clientSock == -1)
                 {
-                    std::cout << "accept error" << std::endl;
-                    close(clientSock);
+                    std::cerr << "accept error" << std::endl;
                     continue;
                 }
                 fcntl(clientSock, F_SETFL, O_NONBLOCK);
@@ -108,7 +105,7 @@ void Server::startServer(int port)
                 }
 
                 // 소켓 읽기 및 command 실행
-                if (it->revents & (POLLIN | POLLERR))
+                if (it->revents & POLLIN)
                 {
                     if (_users.at(it->fd)->readMessage() <= 0)
                     //if (User::_state == DELETE)
