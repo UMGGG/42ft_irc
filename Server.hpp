@@ -28,6 +28,7 @@ private:
     std::vector<Channel*> _channels;
 public:
     Server(std::string& password);
+    ~Server();
 
     // While server running
     void startServer(int port);

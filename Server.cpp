@@ -5,6 +5,16 @@ Server::Server(std::string& password)
 {
 }
 
+Server::~Server()
+{
+    // free allocated memories
+    for (std::map<int, User*>::iterator it = _users.begin(); it != _users.end(); ++it)
+        delete it->second;
+
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+        delete *it;
+}
+
 static void ft_bzero(void *s, size_t n)
 {
     size_t	i;
