@@ -6,15 +6,20 @@ void Command::INVITE()
 	{
 		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "INVITE"));
 		return;
-	}	// 없는 채널
+	}// 없는 채널
 	else if (_server->getChannel(this->_params[1]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[1]));
 		return ;
-	} // 서버에 해당하는 유저가 없을때
+	}// 서버에 해당하는 유저가 없을때
 	else if (_server->getUser(this->_params[0]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[0]));
+		return ;
+	}// 채널에 존재하지않을때
+	else if (_sender->isJoined(this->_params[1]) == false)
+	{
+		sendReply(_sender->getSocket(), ERR_NOTONCHANNEL(_server->getName(), _sender->getNick(), this->_params[1]));
 		return ;
 	} // 채널에 유저가 이미 있을때
 	else if (_server->getChannel(this->_params[1])->getUser(this->_params[0]) != NULL)

@@ -6,15 +6,21 @@ void Command::KICK()
 	{
 		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "KICK"));
 		return;
-	}// 내가 채널에 없거나 없는 채널일 때
+	}// 없는 채널일 때
 	else if (_server->getChannel(this->_params[0]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
-	}// 채널에 해당 닉네임이 없을 때
+	}
+	// 채널에 해당 닉네임이 없을 때
 	else if (_server->getChannel(this->_params[0])->getUser(this->_params[1]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[1]));
+		return ;
+	}// 채널에 존재하지않을때
+	else if (_sender->isJoined(this->_params[0]) == false)
+	{
+		sendReply(_sender->getSocket(), ERR_NOTONCHANNEL(_server->getName(), _sender->getNick(), this->_params[0]));
 		return ;
 	} // op권한이 없을때
 	else if (_server->getChannel(this->_params[0])->isOperator(_sender) == false)
