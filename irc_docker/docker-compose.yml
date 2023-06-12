@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  ircserv:
+    build: ./docker_files/ircserv
+    container_name: ircserv
+    image: ircserv
+    restart: always
+    tty: true
+    networks:
+      - my_network
+
+  client1:
+    build: ./docker_files/client
+    container_name: client1
+    image: client1
+    restart: always
+    tty: true
+    networks:
+      - my_network
+
+  client2:
+    build: ./docker_files/client
+    container_name: client2
+    image: client2
+    restart: always
+    tty: true
+    networks:
+      - my_network
+
+  client3:
+    build: ./docker_files/client
+    container_name: client3
+    image: client3
+    restart: always
+    tty: true
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
+    name: my_network
