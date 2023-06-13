@@ -2,11 +2,16 @@
 
 void Command::INVITE()
 {
-	if (this->_params.size() < 1)
+	if (this->_params.size() < 2)
 	{
 		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "INVITE"));
 		return;
-	}// channel not exist
+	}// sender is not register
+	else if (_sender->getStatus() != CONNECTED)
+	{
+		sendReply(_sender->getSocket(), ERR_NOTREGISTERED(_server->getName(), _sender->getNick(), "INVITE"));
+		return;
+	}// channel is not exist
 	else if (_server->getChannel(this->_params[1]) == NULL)
 	{
 		sendReply(_sender->getSocket(), ERR_NOSUCHNICK(_server->getName(), _sender->getNick(), this->_params[1]));

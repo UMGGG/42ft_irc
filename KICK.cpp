@@ -2,9 +2,14 @@
 
 void Command::KICK()
 {
-	if (this->_params.size() < 1)
+	if (this->_params.size() < 2)
 	{
 		sendReply(_sender->getSocket(), ERR_NEEDMOREPARAMS(_server->getName(), _sender->getNick(), "KICK"));
+		return;
+	}// sender is not register
+	else if (_sender->getStatus() != CONNECTED)
+	{
+		sendReply(_sender->getSocket(), ERR_NOTREGISTERED(_server->getName(), _sender->getNick(), "KICK"));
 		return;
 	}// channel not exist
 	else if (_server->getChannel(this->_params[0]) == NULL)
