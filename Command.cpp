@@ -55,6 +55,8 @@ void Command::execute()
         TOPIC();
     else if (!_command.compare("INVITE"))
         INVITE();
+    else
+        sendReply(_sender->getSocket(), ERR_UNKNOWNCOMMAND(_server->getName(), _sender->getNick(), _command));
 }
 
 void Command::sendReply(int fd, std::string reply)

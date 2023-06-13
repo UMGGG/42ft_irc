@@ -39,7 +39,7 @@ void Command::KICK()
 	_server->getChannel(this->_params[0])->removeUser(_server->getChannel(this->_params[0])->getUser(this->_params[1]));
 	if (_server->getChannel(this->_params[0])->empty())
 	{
-	delete _server->getChannel(this->_params[0]);
-	_server->removeChannel(_server->getChannel(this->_params[0]));
+		delete _server->getChannel(this->_params[0]);
+		_server->removeChannel(_server->getChannel(this->_params[0]));
 	}
 }
