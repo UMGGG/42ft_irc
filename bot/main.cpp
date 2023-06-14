@@ -1,22 +1,5 @@
-#include <sys/socket.h>
-#include <unistd.h>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <time.h>
-#include <vector>
-#include <signal.h>
-#include <Reply_bot.hpp>
-
-int clnt_sock;
-
-void error_handling(std::string);
-void terminate(int signal);
-std::string get_date();
-std::string check_start(std::string msg);
-int command(std::string& message, std::string ch);
+#include "Bot.hpp"
+#include "Reply_bot.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -108,9 +91,19 @@ std::string get_date()
 	time_t curr_time = time(NULL);
 	struct tm *local_time = NULL;
 	local_time = localtime(&curr_time);
-	date = TIMER(std::to_string(local_time->tm_year + 1900), std::to_string(local_time->tm_mon), \
-	std::to_string(local_time->tm_mday), std::to_string(local_time->tm_hour), \
-	std::to_string(local_time->tm_min), std::to_string(local_time->tm_sec));
+	std::stringstream year;
+	year << local_time->tm_year + 1900;
+	std::stringstream month;
+	month << local_time->tm_mon;
+	std::stringstream day;
+	day << local_time->tm_mday;
+	std::stringstream hour;
+	hour << local_time->tm_hour;
+	std::stringstream min;
+	min << local_time->tm_min;
+	std::stringstream sec;
+	sec << local_time->tm_sec;
+	date = TIMER(year.str(), month.str(), day.str(), hour.str(), min.str(), sec.str());
 	return (date);
 }
 
