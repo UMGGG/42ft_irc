@@ -10,7 +10,7 @@ int User::readMessage()
     char buf[BUF_SIZE];
     int nread;
 
-    nread = read(_socket, buf, BUF_SIZE);
+    nread = recv(_socket, buf, BUF_SIZE, MSG_DONTWAIT);
 
     if (nread == 0 || nread == -1)
         return (0);
