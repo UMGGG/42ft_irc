@@ -8,7 +8,8 @@
 #include <time.h>
 #include <signal.h>
 
-#define RPL_JOIN(channel) "JOIN " + channel + "\r\n";
+#define JOIN_MSG(channel) "JOIN " + channel + "\r\n";
+#define CHECKIN_MSG(pass) "PASS " + pass + "\r\nNICK TIMEBOT\r\nUSER root root 127.0.0.1 :JJJ\r\n";
 
 int clnt_sock;
 
@@ -20,7 +21,10 @@ int main(int argc, char *argv[])
 	int result;
 	struct sockaddr_in serv_addr;
 	char message[500];
-	std::string checkin_msg;
+	std::string msg;
+	std::string ping_msg = "PING ft_irc\r\n";
+	std::string ch_list;
+	std::string ch;
 
 	if (argc != 4)
 	{
@@ -40,24 +44,41 @@ int main(int argc, char *argv[])
 	if (connect(clnt_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 		error_handling("connect error");
 
-	checkin_msg += "PASS ";
-	checkin_msg += argv[3];
-	checkin_msg += "\r\nNICK BOT\r\nUSER root root 127.0.0.1 :JJJ\r\n";
-	send(clnt_sock, checkin_msg.c_str(), checkin_msg.size(), 0);
-	memset(&checkin_msg, 0, sizeof(checkin_msg));
-
-	std::getline(std::cin, checkin_msg);
-	std::string msg = RPL_JOIN(checkin_msg);
+	std::string pass = argv[3];
+	msg = CHECKIN_MSG(pass);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
+	memset(&msg, 0, sizeof(msg));
+
+	// servername을 받아와서 저장해줘야함
 	signal(SIGINT, terminate);
+
+	std::getline(std::cin, ch_list);
+	std::stringstream stream;
+	stream.str(ch_list);
+	while (stream >> ch)
+	{
+		msg = JOIN_MSG(ch);
+		send(clnt_sock, msg.c_str(), msg.size(), 0);
+		memset(&msg, 0, sizeof(msg));
+		result = recv(clnt_sock, message, sizeof(message) - 1, 0);
+		memset(&message, 0, sizeof(message));
+	}
+
 	while(1)
 	{
-		result = recv(clnt_sock, message, sizeof(message) - 1, 0);
+		result = recv(clnt_sock, message, sizeof(message) - 1, MSG_DONTWAIT);
 		if (result != -1)
+		{
 			std::cout << message << std::endl;
-		memset(&message, 0, sizeof(message));
+			memset(&message, 0, sizeof(message));
+		}
+		if (time(NULL) % 50 == 0)
+		{
+			send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
+			sleep(1);
+		}
 		//kick 당하면 exit하기
-		//채널이 없는 채널이면 exit하기
+		//!TIME 들어오면 현재시간 채널로 send 해주기
 	}
 }
 
@@ -71,8 +92,9 @@ void terminate(int signal)
 {
 	if (signal == SIGINT)
 	{
-		std::string exit_msg = "QUIT :leaving\r\n";
-		send(clnt_sock, exit_msg.c_str(), exit_msg.size(), 0);
+		//std::string exit_msg = "QUIT :Connection closed\r\n";
+		//send(clnt_sock, exit_msg.c_str(), exit_msg.size(), 0);
+		//sleep(1);
 		close(clnt_sock);
 		exit (0);
 	}
