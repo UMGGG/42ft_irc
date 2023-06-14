@@ -82,11 +82,6 @@ void Command::MODE()
         return;
     }
 
-    // MODE #channel b - ignore
-    // irssi periodically send this message, but we don't need to manage this
-    if (!_params[1].compare("b"))
-        return ;
-
     // not an operator
     if (!channel->isOperator(_sender))
     {
