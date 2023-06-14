@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
 	std::string msg;
 	std::string ping_msg = "PING ft_irc\r\n";
 	std::string ch_list;
-	std::string ch;
 
 	if (argc != 4)
 	{
@@ -48,21 +47,20 @@ int main(int argc, char *argv[])
 	msg = CHECKIN_MSG(pass);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
 	memset(&msg, 0, sizeof(msg));
-
+	result = recv(clnt_sock, message, sizeof(message) - 1, 0);
+	if (result != -1)
+		std::cout << message << std::endl;
+	memset(&message, 0, sizeof(message));
 	// servername을 받아와서 저장해줘야함
 	signal(SIGINT, terminate);
 
-	std::getline(std::cin, ch_list);
-	std::stringstream stream;
-	stream.str(ch_list);
-	while (stream >> ch)
-	{
-		msg = JOIN_MSG(ch);
-		send(clnt_sock, msg.c_str(), msg.size(), 0);
-		memset(&msg, 0, sizeof(msg));
-		result = recv(clnt_sock, message, sizeof(message) - 1, 0);
-		memset(&message, 0, sizeof(message));
-	}
+	std::cin >> ch_list;
+	msg = JOIN_MSG(ch_list);
+	send(clnt_sock, msg.c_str(), msg.size(), 0);
+	memset(&msg, 0, sizeof(msg));
+
+	result = recv(clnt_sock, message, sizeof(message) - 1, 0);
+	memset(&message, 0, sizeof(message));
 
 	while(1)
 	{
