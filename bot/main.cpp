@@ -15,15 +15,20 @@ int clnt_sock;
 void error_handling(std::string);
 void terminate(int signal);
 std::string get_date();
+std::string check_start(std::string msg);
 int command(std::string& message, std::string ch);
 
 int main(int argc, char *argv[])
 {
 	int result;
+
 	struct sockaddr_in serv_addr;
-	char message[500];
+	std::string servername;
+
+	char message[1024];
+
+	std::string ping_msg;
 	std::string msg;
-	std::string ping_msg = "PING ft_irc\r\n";
 	std::string ch;
 
 	if (argc != 4)
@@ -47,44 +52,41 @@ int main(int argc, char *argv[])
 	std::string pass = argv[3];
 	msg = CHECKIN_MSG(pass);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
-	memset(&msg, 0, sizeof(msg));
-	// servername을 받아와서 저장해줘야함
+	sleep(1);
+	recv(clnt_sock, message, sizeof(message) - 1, 0);
+	msg = message;
+	servername = check_start(msg);
+	ping_msg = PING_MSG(servername);
+	memset(&message, 0, sizeof(message));
+
 	signal(SIGINT, terminate);
 
 	std::cin >> ch;
 	msg = JOIN_MSG(ch);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
-	memset(&msg, 0, sizeof(msg));
-	recv(clnt_sock, message, sizeof(message) - 1, 0);
 	while(1)
 	{
 		result = recv(clnt_sock, message, sizeof(message) - 1, MSG_DONTWAIT);
 		if (result != -1)
 		{
 			msg = message;
-			std::cout << msg << std::endl;
 			result = command(msg, ch);
 			if (result == 1)
-			{
-				close(clnt_sock);
-				exit (0);
-			}
+				terminate(2);
 			memset(&message, 0, sizeof(message));
-			memset(&msg, 0, sizeof(msg));
 		}
 		if (time(NULL) % 50 == 0)
 		{
 			send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
 			sleep(1);
 		}
-		//kick 당하면 exit하기
-		//!TIME 들어오면 현재시간 채널로 send 해주기
 	}
 }
 
 void error_handling(std::string message)
 {
 	std::cerr << message << std::endl;
+	close(clnt_sock);
 	exit (1);
 }
 
@@ -107,8 +109,8 @@ std::string get_date()
 	struct tm *local_time = NULL;
 	local_time = localtime(&curr_time);
 	date = TIMER(std::to_string(local_time->tm_year + 1900), std::to_string(local_time->tm_mon), \
-	std::to_string(local_time->tm_mday), std::to_string(local_time->tm_mday), \
-	std::to_string(local_time->tm_mday), std::to_string(local_time->tm_mday));
+	std::to_string(local_time->tm_mday), std::to_string(local_time->tm_hour), \
+	std::to_string(local_time->tm_min), std::to_string(local_time->tm_sec));
 	return (date);
 }
 
@@ -123,7 +125,7 @@ int command(std::string& message, std::string ch)
 	std::string msg;
 
 	message.erase(message.find("\r\n")); // crlf 제거
-	message.erase(0, message.find(' ')); // prefix 제거
+	message.erase(0, message.find(' ') + 1); // prefix 제거
 
 	if (message.find(':') != std::string::npos) // _trailing
 	{
@@ -143,18 +145,15 @@ int command(std::string& message, std::string ch)
 		buf.clear();
 	}
 
-	///
 	if (!command.compare("PRIVMSG"))
 	{
 		if (trailing[0] == '!')
 		{
-			if (trailing.compare("!time") || trailing.compare("!TIME"))
+			if (!trailing.compare("!time") || !trailing.compare("!TIME"))
 			{
 				msg = TIME_MSG(ch, get_date());
-				std::cout << "msg" << std::endl;
 				send(clnt_sock, msg.c_str(), msg.size(), 0);
 			}
-			//...
 		}
 		else
 			return 0;
@@ -163,4 +162,18 @@ int command(std::string& message, std::string ch)
 	if (!command.compare("KICK"))
 		return 1; //exit
 	return 0;
+}
+
+std::string check_start(std::string msg)
+{
+	std::string servername = "";
+	if (msg[0] == ':')
+		servername = msg.substr(1, msg.find(' '));
+	else
+	{
+		servername = msg.substr(0, msg.find(' '));
+		if (servername == "ERROR")
+			error_handling("Can't access to server");
+	}
+	return (servername);
 }
