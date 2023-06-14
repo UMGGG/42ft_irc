@@ -3,6 +3,7 @@
 
 #include "User.hpp"
 #include "Channel.hpp"
+#include "Reply.hpp"
 
 #include <sys/socket.h>
 #include <arpa/inet.h>

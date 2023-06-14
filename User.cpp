@@ -67,7 +67,10 @@ void User::sendNoRepeat(std::string& reply)
     }
 
     for (std::vector<User*>::iterator it = targets.begin(); it != targets.end(); ++it)
+    {
         send((*it)->getSocket(), reply.c_str(), reply.size(), MSG_DONTWAIT);
+        std::cout << "Send to FD: " << (*it)->getSocket() << ": " << reply << std::endl;
+    }
 }
 
 //setters

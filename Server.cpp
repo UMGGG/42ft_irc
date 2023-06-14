@@ -97,20 +97,23 @@ void Server::startServer(int port)
             std::vector<struct pollfd>::iterator it = _pollFD.begin() + 1;
             while (it != _pollFD.end())
             {
-                // 연결 종료
+                User* user = _users.at(it->fd);
+                // disconnected not by QUIT command
                 if (it->revents & POLLHUP)
                 {
-                    disconnect(_users.at(it->fd));
+                    std::string reply = RPL_QUIT(user->getNick(), user->getUsername(), user->getIP(), "Client exited");
+                    user->sendNoRepeat(reply);
+                    disconnect(user);
                     continue;
                 }
 
-                // 소켓 읽기 및 command 실행
+                // recv and execute command
                 if (it->revents & POLLIN)
                 {
-                    if (_users.at(it->fd)->readMessage() <= 0)
+                    if (user->readMessage() <= 0)
                     //if (User::_state == DELETE)
                     {
-                        disconnect(_users.at(it->fd));
+                        disconnect(user);
                         continue;
                     }
                 }
