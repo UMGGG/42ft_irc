@@ -44,7 +44,8 @@ int main(int argc, char *argv[])
 
 	signal(SIGINT, terminate);
 
-	std::cin >> ch;
+	std::cout << "type <channel> <password>" << std::endl;
+	std::getline(std::cin, ch);
 	msg = JOIN_MSG(ch);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
 
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
 		if (nread == 0)
 		{
 			std::cout << "disconnected" << std::endl;
+			//do close??
 			exit(1);
 		}
 		else if (nread == -1)
