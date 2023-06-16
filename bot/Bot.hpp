@@ -18,6 +18,6 @@ void error_handling(std::string);
 void terminate(int signal);
 std::string get_date();
 std::string check_start(std::string msg);
-int command(std::string& message, std::string ch);
+int command(std::string message, std::string ch);
 
 #endif

@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-	int result;
+	// int result;
 
 	struct sockaddr_in serv_addr;
 	std::string servername;
@@ -47,21 +47,57 @@ int main(int argc, char *argv[])
 	std::cin >> ch;
 	msg = JOIN_MSG(ch);
 	send(clnt_sock, msg.c_str(), msg.size(), 0);
+
+	msg.clear();
+	msg = "";
+
+	// Set socket timeout
+	struct timeval timeout;
+	timeout.tv_sec = 5;
+	timeout.tv_usec = 0;
+	setsockopt(clnt_sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+
 	while(1)
 	{
-		result = recv(clnt_sock, message, sizeof(message) - 1, MSG_DONTWAIT);
-		if (result != -1)
+		// result = recv(clnt_sock, message, sizeof(message) - 1, MSG_DONTWAIT);
+		// if (result != -1)
+		// {
+		// 	msg = message;
+		// 	result = command(msg, ch);
+		// 	if (result == 1)
+		// 		terminate(2);
+		// 	memset(&message, 0, sizeof(message));
+		// }
+		// if (time(NULL) % 50 == 0)
+		// {
+		// 	send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
+		// 	sleep(1);
+		// }
+
+		char buf[512];
+		int nread;
+
+		nread = recv(clnt_sock, buf, 512, 0);
+
+		if (nread == 0)
 		{
-			msg = message;
-			result = command(msg, ch);
-			if (result == 1)
-				terminate(2);
-			memset(&message, 0, sizeof(message));
+			std::cout << "disconnected" << std::endl;
+			exit(1);
 		}
-		if (time(NULL) % 50 == 0)
+		else if (nread == -1)
 		{
 			send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
-			sleep(1);
+			std::cout << "Send: " << ping_msg << std::endl;
+		}
+		else
+			msg.append(buf, nread);
+
+		while (msg.find("\r\n") != std::string::npos)
+		{
+			std::cout << "Recv: " << msg.substr(0, msg.find("\r\n") + 2) << std::endl;
+			if (command(msg, ch))
+				terminate(2);
+			msg.erase(0, msg.find("\r\n") + 2); // trim used message
 		}
 	}
 }
@@ -107,7 +143,7 @@ std::string get_date()
 	return (date);
 }
 
-int command(std::string& message, std::string ch)
+int command(std::string message, std::string ch)
 {
 	std::string command = "";
 	std::vector<std::string> params;
@@ -146,6 +182,7 @@ int command(std::string& message, std::string ch)
 			{
 				msg = TIME_MSG(ch, get_date());
 				send(clnt_sock, msg.c_str(), msg.size(), 0);
+				std::cout << "Send: " << msg << std::endl;
 			}
 		}
 		else
