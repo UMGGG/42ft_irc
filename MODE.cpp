@@ -16,22 +16,21 @@ void Command::MODE()
         return;
     }
 
-    Channel* channel = _server->getChannel(_params[0]);
-
     if (_params[0][0] != '#') // this is user mode command (ignore)
         return ;
+
+    Channel* channel = _server->getChannel(_params[0]);
+    // if (no such channel)
+    //:irc.local 403 qwer #a :No such channel
+    if (channel == NULL)
+    {
+        sendReply(_sender->getSocket(), ERR_NOSUCHCHANNEL(_server->getName(), _sender->getNick(), _params[0]));
+        return ;
+    }
 
     // no mode option (show current channel's mode)
     if (_params.size() == 1)
     {
-        // if (no such channel)
-        //:irc.local 403 qwer #a :No such channel
-        if (channel == NULL)
-        {
-            sendReply(_sender->getSocket(), ERR_NOSUCHCHANNEL(_server->getName(), _sender->getNick(), _params[0]));
-            return ;
-        }
-
         // reply (current channel's mode)
         // :irc.local 324 qwer #tradis +knt :<key>
         // :irc.local 329 qwer #tradis :1685442445
