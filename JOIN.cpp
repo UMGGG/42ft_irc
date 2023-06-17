@@ -1,6 +1,5 @@
 #include "Command.hpp"
 
-//todo
 void Command::JOIN()
 {
     // Error
