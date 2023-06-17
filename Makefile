@@ -3,7 +3,11 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 INCLUDE = -I.
 NAME = ircserv
 
-SRCS = main.cpp Server.cpp User.cpp Channel.cpp Command.cpp \
+SRCS = main.cpp \
+Server.cpp \
+User.cpp \
+Channel.cpp \
+Command.cpp \
 JOIN.cpp \
 NICK.cpp \
 PASS.cpp \
