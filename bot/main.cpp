@@ -3,13 +3,12 @@
 
 int main(int argc, char *argv[])
 {
-	// int result;
-
 	struct sockaddr_in serv_addr;
 	std::string servername;
 
 	char message[1024];
 
+	time_t ping_last = time(NULL);
 	std::string ping_msg;
 	std::string msg;
 	std::string ch;
@@ -60,21 +59,6 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		// result = recv(clnt_sock, message, sizeof(message) - 1, MSG_DONTWAIT);
-		// if (result != -1)
-		// {
-		// 	msg = message;
-		// 	result = command(msg, ch);
-		// 	if (result == 1)
-		// 		terminate(2);
-		// 	memset(&message, 0, sizeof(message));
-		// }
-		// if (time(NULL) % 50 == 0)
-		// {
-		// 	send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
-		// 	sleep(1);
-		// }
-
 		char buf[512];
 		int nread;
 
@@ -83,14 +67,10 @@ int main(int argc, char *argv[])
 		if (nread == 0)
 		{
 			std::cout << "disconnected" << std::endl;
-			//do close??
-			exit(1);
+			terminate(2);
 		}
 		else if (nread == -1)
-		{
-			send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
-			std::cout << "Send: " << ping_msg << std::endl;
-		}
+			std::cout << "No message to read(time out 5sec)" << std::endl;
 		else
 			msg.append(buf, nread);
 
@@ -100,6 +80,14 @@ int main(int argc, char *argv[])
 			if (command(msg, ch))
 				terminate(2);
 			msg.erase(0, msg.find("\r\n") + 2); // trim used message
+		}
+
+		if (time(NULL) - ping_last >= 50)
+		{
+			send(clnt_sock, ping_msg.c_str(), ping_msg.size(), 0);
+			ping_last = time(NULL);
+			std::cout << "Send: " << ping_msg << std::endl;
+			sleep(1);
 		}
 	}
 }
@@ -115,9 +103,6 @@ void terminate(int signal)
 {
 	if (signal == SIGINT)
 	{
-		//std::string exit_msg = "QUIT :Connection closed\r\n";
-		//send(clnt_sock, exit_msg.c_str(), exit_msg.size(), 0);
-		//sleep(1);
 		close(clnt_sock);
 		exit (0);
 	}
